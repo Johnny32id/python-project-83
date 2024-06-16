@@ -3,7 +3,9 @@ import os
 from dotenv import load_dotenv
 from .validator import validate
 from .normalizer import normalize
-from .db import add_url, get_url_by_name, get_url_by_id, get_all_urls
+from .db import (
+    add_url, get_url_by_name,
+    get_url_by_id, get_all_urls, add_check, get_checks_by_url_id)
 
 load_dotenv()
 
@@ -31,7 +33,7 @@ def create_url():
     else:
         url_id = add_url(url)
         flash('Страница успешно добавлена', 'alert-success')
-    return redirect(url_for('get_url', url_id=url_id))
+    return redirect(url_for('get_url', id=url_id))
 
 
 @app.get('/urls')
@@ -40,9 +42,17 @@ def urls_list():
     return render_template('urls_list.html', items=urls), 200
 
 
-@app.get('/urls/url<int:url_id>')
-def get_url(url_id):
-    url = get_url_by_id(url_id)
+@app.get('/urls/<int:id>')
+def get_url(id):
+    url = get_url_by_id(id)
     if url is None:
         return render_template('404_page.html'), 404
-    return render_template('url_details.html', url=url)
+    checks = get_checks_by_url_id(id)
+    return render_template('url_details.html', url=url, checks=checks)
+
+
+@app.post('/urls/<int:id>/checks')
+def add_url_check(id):
+    add_check(id)
+    flash('Проверка успешна', 'alert-success')
+    return redirect(url_for('get_url', id=id))

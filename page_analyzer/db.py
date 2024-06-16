@@ -57,3 +57,18 @@ def get_all_urls():
             }
             urls.append(url_data)
         return urls
+
+
+def add_check(id):
+    with DatabaseConnection() as cursor:
+        query = ('INSERT INTO url_checks (url_id, created_at) VALUES (%s, %s)')
+        values = (id, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        cursor.execute(query, values)
+
+
+def get_checks_by_url_id(id):
+    with DatabaseConnection() as cursor:
+        query = (f'SELECT * FROM url_checks WHERE url_id = {id}'
+                 ' ORDER BY id DESC')
+        cursor.execute(query)
+        return cursor.fetchall()
