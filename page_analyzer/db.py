@@ -47,22 +47,27 @@ def get_url_by_id(url_id):
 def get_all_urls():
     with DatabaseConnection() as cursor:
         query_urls = 'SELECT id, name FROM urls ORDER BY id DESC;'
+        query_checks = 'SELECT url_id, status_code FROM url_checks'
         cursor.execute(query_urls)
         all_urls = cursor.fetchall()
+        cursor.execute(query_checks)
+        checks = {data.url_id: data for data in cursor.fetchall()}
         urls = []
         for url in all_urls:
             url_data = {
                 'id': url.id,
                 'name': url.name,
             }
+            if check := checks.get(url.id):
+                url_data['status_code'] = check.status_code
             urls.append(url_data)
         return urls
 
 
-def add_check(id):
+def add_check(data):
     with DatabaseConnection() as cursor:
-        query = ('INSERT INTO url_checks (url_id, created_at) VALUES (%s, %s)')
-        values = (id, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        query = ('INSERT INTO url_checks (url_id, created_at, status_code) VALUES (%s, %s, %s)')
+        values = (data.get('url_id'), datetime.now().strftime('%Y-%m-%d %H:%M:%S'), data.get('status_code'))
         cursor.execute(query, values)
 
 

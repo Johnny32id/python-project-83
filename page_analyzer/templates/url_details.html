@@ -33,12 +33,14 @@
             <tbody>
             <tr>
                 <th>ID</th>
+                <th>Код ответа</th>
                 <th>Дата создания</th>
             </tr>
             {% if checks %}
             {% for check in checks %}
             <tr>
                 <td>{{ check.id }}</td>
+                <td>{{ check.status_code }}</td>
                 <td>{{ check.created_at }}</td>
             </tr>
             {% endfor %}

@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from .validator import validate
 from .normalizer import normalize
+import requests
 from .db import (
     add_url, get_url_by_name,
     get_url_by_id, get_all_urls, add_check, get_checks_by_url_id)
@@ -53,6 +54,16 @@ def get_url(id):
 
 @app.post('/urls/<int:id>/checks')
 def add_url_check(id):
-    add_check(id)
+    url = get_url_by_id(id)
+    try:
+        responce = requests.get(url.name)
+        responce.raise_for_status()
+    except requests.exceptions.RequestException:
+        flash('Произошла ошибка при проверке', 'alert-danger')
+        return redirect(url_for('get_url', id=id))
+    data = {}
+    data['url_id'] = id
+    data['status_code'] = responce.status_code
+    add_check(data)
     flash('Проверка успешна', 'alert-success')
     return redirect(url_for('get_url', id=id))
