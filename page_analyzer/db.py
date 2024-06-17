@@ -66,8 +66,11 @@ def get_all_urls():
 
 def add_check(data):
     with DatabaseConnection() as cursor:
-        query = ('INSERT INTO url_checks (url_id, created_at, status_code) VALUES (%s, %s, %s)')
-        values = (data.get('url_id'), datetime.now().strftime('%Y-%m-%d %H:%M:%S'), data.get('status_code'))
+        query = ('INSERT INTO url_checks (url_id, created_at, status_code)'
+                 ' VALUES (%s, %s, %s)')
+        values = (data.get('url_id'),
+                  datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                  data.get('status_code'))
         cursor.execute(query, values)
 
 
