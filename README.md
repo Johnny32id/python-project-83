@@ -5,10 +5,10 @@
 ***Анализатор страниц предназначен для проверки сайтов на SEO-пригодность***
 
 ### Установка:
--install poetry
--make install
+- install poetry
+- make install
 
 ### Запуск:
--make start
+- make start
 
 ***Демонстрационный проект можно посмотреть по [ссылке](https://python-project-83-gbc5.onrender.com/)***
