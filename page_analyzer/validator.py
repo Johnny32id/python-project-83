@@ -9,4 +9,4 @@ def validate(url):
     elif len(url) > MAX_URL_LENGTH:
         return f'Длина URL превышает {MAX_URL_LENGTH} символов.'
     elif not validators.url(url):
-        return 'Некоректный URL'
+        return 'Некорректный URL'
