@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from .validator import validate
 from .normalizer import normalize
+from .parser import parse
 import requests
 from .db import (
     add_url, get_url_by_name,
@@ -16,7 +17,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 @app.get('/')
 def get_index():
-    return render_template('index.html'), 200
+    return render_template('form.html'), 200
 
 
 @app.post('/urls')
@@ -25,7 +26,7 @@ def create_url():
     error = validate(url)
     if error:
         flash(error, 'alert-danger')
-        return render_template('index.html'), 422
+        return render_template('form.html'), 422
     url = normalize(url)
     url_in_db = get_url_by_name(url)
     if url_in_db:
@@ -61,7 +62,7 @@ def add_url_check(id):
     except requests.exceptions.RequestException:
         flash('Произошла ошибка при проверке', 'alert-danger')
         return redirect(url_for('get_url', id=id))
-    data = {}
+    data = parse(responce.text)
     data['url_id'] = id
     data['status_code'] = responce.status_code
     add_check(data)

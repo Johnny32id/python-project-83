@@ -25,7 +25,7 @@ def add_url(url):
     with DatabaseConnection() as cursor:
         query = ('INSERT INTO urls (name, created_at) VALUES (%s, %s) '
                  'RETURNING id')
-        values = (url, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        values = (url, datetime.now())
         cursor.execute(query, values)
         return cursor.fetchone().id
 
@@ -37,17 +37,20 @@ def get_url_by_name(url):
         return cursor.fetchone()
 
 
-def get_url_by_id(url_id):
+def get_url_by_id(id):
     with DatabaseConnection() as cursor:
-        query = ('SELECT * FROM urls WHERE id = (%s)')
-        cursor.execute(query, (url_id, ))
+        query = (f'SELECT * FROM urls WHERE id = {id}')
+        cursor.execute(query)
         return cursor.fetchone()
 
 
 def get_all_urls():
     with DatabaseConnection() as cursor:
         query_urls = 'SELECT id, name FROM urls ORDER BY id DESC;'
-        query_checks = 'SELECT url_id, status_code FROM url_checks'
+        query_checks = ('SELECT url_id,'
+                        ' status_code, MAX(created_at) AS last_check'
+                        ' FROM url_checks GROUP BY url_id, status_code'
+                        ' ORDER BY last_check;')
         cursor.execute(query_urls)
         all_urls = cursor.fetchall()
         cursor.execute(query_checks)
@@ -60,17 +63,19 @@ def get_all_urls():
             }
             if check := checks.get(url.id):
                 url_data['status_code'] = check.status_code
+                url_data['last_check'] = check.last_check
             urls.append(url_data)
         return urls
 
 
 def add_check(data):
     with DatabaseConnection() as cursor:
-        query = ('INSERT INTO url_checks (url_id, created_at, status_code)'
-                 ' VALUES (%s, %s, %s)')
-        values = (data.get('url_id'),
-                  datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                  data.get('status_code'))
+        query = ('INSERT INTO url_checks '
+                 '(url_id, status_code, h1, title, description, created_at) '
+                 'VALUES (%s, %s, %s, %s, %s, %s)')
+        values = (data.get('url_id'), data.get('status_code'),
+                  data.get('h1'), data.get('title'), data.get('description'),
+                  datetime.now())
         cursor.execute(query, values)
 
 
