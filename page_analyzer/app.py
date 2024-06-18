@@ -41,7 +41,7 @@ def create_url():
 @app.get('/urls')
 def urls_list():
     urls = get_all_urls()
-    return render_template('urls_list.html', items=urls), 200
+    return render_template('urls_list.html', urls=urls), 200
 
 
 @app.get('/urls/<int:id>')

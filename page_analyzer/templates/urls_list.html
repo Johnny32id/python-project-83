@@ -15,15 +15,15 @@
             </tr>
             </thead>
             <tbody>
-            {% if items %}
-            {% for item in items %}
+            {% if urls %}
+            {% for url in urls %}
             <tr>
-                <td>{{ item.id }}</td>
-                <td><a href="{{ url_for('get_url', id=item.id) }}">
-                    {{ item.name }}
+                <td>{{ url.id }}</td>
+                <td><a href="{{ url_for('get_url', id=url.id) }}">
+                    {{ url.name }}
                 </a></td>
-                <td>{{ item.last_check.strftime('%Y-%m-%d') }}</td>
-                <td>{{ item.status_code }}</td>
+                <td>{{ url.last_check.strftime('%Y-%m-%d') }}</td>
+                <td>{{ url.status_code }}</td>
             </tr>
             {% endfor %}
             {% endif %}
