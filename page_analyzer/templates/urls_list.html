@@ -1,4 +1,4 @@
-{% extends 'main.html' %}
+{% extends 'index.html' %}
 
 {% block main %}
     <h1>Сайты</h1>
@@ -10,6 +10,7 @@
             <tr>
                 <th>ID</th>
                 <th>Имя</th>
+                <th>Последняя проверка</th>
                 <th>Код ответа</th>
             </tr>
             </thead>
@@ -21,6 +22,7 @@
                 <td><a href="{{ url_for('get_url', id=item.id) }}">
                     {{ item.name }}
                 </a></td>
+                <td>{{ item.last_check.strftime('%Y-%m-%d') }}</td>
                 <td>{{ item.status_code }}</td>
             </tr>
             {% endfor %}
