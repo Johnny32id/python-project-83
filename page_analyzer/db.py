@@ -46,26 +46,15 @@ def get_url_by_id(id):
 
 def get_all_urls():
     with DatabaseConnection() as cursor:
-        query_urls = 'SELECT id, name FROM urls ORDER BY id DESC;'
-        query_checks = ('SELECT url_id,'
-                        ' status_code, MAX(created_at) AS last_check'
-                        ' FROM url_checks GROUP BY url_id, status_code'
-                        ' ORDER BY last_check;')
-        cursor.execute(query_urls)
-        all_urls = cursor.fetchall()
-        cursor.execute(query_checks)
-        checks = {data.url_id: data for data in cursor.fetchall()}
-        urls = []
-        for url in all_urls:
-            url_data = {
-                'id': url.id,
-                'name': url.name,
-            }
-            if check := checks.get(url.id):
-                url_data['status_code'] = check.status_code
-                url_data['last_check'] = check.last_check
-            urls.append(url_data)
-        return urls
+        query = ('SELECT urls.id, urls.name,'
+                 ' checks.status_code,'
+                 ' MAX(checks.created_at) AS last_check FROM urls'
+                 ' LEFT JOIN url_checks AS checks'
+                 ' ON urls.id = checks.url_id'
+                 ' GROUP BY urls.id, status_code'
+                 ' ORDER BY urls.id DESC;')
+        cursor.execute(query)
+        return cursor.fetchall()
 
 
 def add_check(data):
