@@ -66,5 +66,5 @@ def add_url_check(id):
     data['url_id'] = id
     data['status_code'] = responce.status_code
     add_check(data)
-    flash('Проверка успешна', 'alert-success')
+    flash('Страница успешно проверена', 'alert-success')
     return redirect(url_for('get_url', id=id))
