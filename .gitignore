@@ -8,3 +8,4 @@ coverage.xml
 .pytest_cache/
 node_modules/
 .env
+package-lock.json
