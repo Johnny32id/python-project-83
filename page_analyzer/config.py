@@ -26,8 +26,13 @@ class Config:
     REQUEST_CONNECT_TIMEOUT: int = int(
         os.getenv('REQUEST_CONNECT_TIMEOUT', '5')
     )
-    REQUEST_READ_TIMEOUT: int = int(os.getenv('REQUEST_READ_TIMEOUT', '30'))
-    MAX_RESPONSE_SIZE: int = int(os.getenv('MAX_RESPONSE_SIZE', '10485760'))  # 10 МБ
+    REQUEST_READ_TIMEOUT: int = int(
+        os.getenv('REQUEST_READ_TIMEOUT', '30')
+    )
+    # 10 МБ
+    MAX_RESPONSE_SIZE: int = int(
+        os.getenv('MAX_RESPONSE_SIZE', '10485760')
+    )
     MAX_REDIRECTS: int = int(os.getenv('MAX_REDIRECTS', '10'))
 
     @classmethod
@@ -93,11 +98,11 @@ class Config:
         if not cls.SECRET_KEY:
             cls.SECRET_KEY = secrets.token_urlsafe(32)
             logger.warning(
-                'SECRET_KEY не задан. Сгенерирован автоматически для разработки.'
+                'SECRET_KEY не задан. '
+                'Сгенерирован автоматически для разработки.'
             )
         return cls.SECRET_KEY
 
 
 # Создаем экземпляр конфигурации
 config = Config()
-

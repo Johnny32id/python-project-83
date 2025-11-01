@@ -70,7 +70,8 @@ class URLService:
                 'flash_category': 'alert-success'
             }
         except Exception as e:
-            logger.error(f'Ошибка при добавлении URL {normalized_url}: {str(e)}')
+            error_msg = f'Ошибка при добавлении URL {normalized_url}: {str(e)}'
+            logger.error(error_msg)
             return {
                 'success': False,
                 'url_id': None,
@@ -111,4 +112,3 @@ class URLService:
             list: Список проверок для URL.
         """
         return get_checks_by_url_id(id)
-

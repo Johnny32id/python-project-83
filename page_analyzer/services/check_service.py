@@ -83,7 +83,8 @@ class CheckService:
 
             # Проверка размера ответа
             content_length = response.headers.get('Content-Length')
-            if content_length and int(content_length) > config.MAX_RESPONSE_SIZE:
+            max_size = config.MAX_RESPONSE_SIZE
+            if content_length and int(content_length) > max_size:
                 return {
                     'success': False,
                     'flash_message': 'Размер ответа слишком большой',
@@ -173,7 +174,9 @@ class CheckService:
             }
 
     @staticmethod
-    def _read_response_content(response: requests.Response, url: str) -> Optional[str]:
+    def _read_response_content(
+        response: requests.Response, url: str
+    ) -> Optional[str]:
         """Чтение содержимого ответа с ограничением размера.
 
         Args:
@@ -208,4 +211,3 @@ class CheckService:
         except Exception as e:
             logger.error(f'Ошибка при чтении ответа от {url}: {str(e)}')
             return None
-
