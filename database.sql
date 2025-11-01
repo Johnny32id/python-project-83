@@ -16,3 +16,8 @@ CREATE TABLE url_checks (
     status_code smallint,
     created_at timestamp
 );
+
+-- Индексы для улучшения производительности запросов
+CREATE INDEX idx_url_checks_url_id ON url_checks(url_id);
+CREATE INDEX idx_url_checks_created_at ON url_checks(created_at DESC);
+CREATE INDEX idx_urls_created_at ON urls(created_at DESC);

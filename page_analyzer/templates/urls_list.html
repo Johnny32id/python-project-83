@@ -3,8 +3,9 @@
 {% block main %}
     <h1>Сайты</h1>
 
+    {% if urls %}
     <div class="table-responsive">
-        <table class="table table-bordered table-hover text-nowrap"
+        <table class="table table-bordered table-hover"
                data-test="urls">
             <thead>
             <tr>
@@ -15,19 +16,37 @@
             </tr>
             </thead>
             <tbody>
-            {% if urls %}
             {% for url in urls %}
             <tr>
                 <td>{{ url.id }}</td>
-                <td><a href="{{ url_for('get_url', id=url.id) }}">
-                    {{ url.name }}
-                </a></td>
-                <td>{{ url.last_check.strftime('%Y-%m-%d') if url.last_check else '' }}</td>
-                <td>{{ url.status_code if url.status_code else '' }}</td>
+                <td>
+                    <a href="{{ url_for('get_url', id=url.id) }}" class="text-break" style="max-width: 200px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ url.name }}">
+                        {{ url.name }}
+                    </a>
+                </td>
+                <td>
+                    {% if url.last_check %}
+                        {{ url.last_check.strftime('%d.%m.%Y %H:%M') }}
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if url.status_code %}
+                        {{ url.status_code }}
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
-            {% endif %}
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Нет добавленных сайтов</h4>
+        <p class="mb-0">Добавьте первый сайт для проверки на <a href="{{ url_for('get_index') }}" class="alert-link">главной странице</a>.</p>
+    </div>
+    {% endif %}
 {% endblock %}

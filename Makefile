@@ -14,3 +14,9 @@ start:
 
 lint:
 		poetry run flake8 page_analyzer/
+
+test:
+		poetry run pytest tests/ -v
+
+test-cov:
+		poetry run pytest tests/ -v --cov=page_analyzer --cov-report=term-missing
